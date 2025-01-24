@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Hospital - Treatment Price List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header id="hospital-name">Random Hospital</header>
+
+    <main>
+        <h2>Treatment Price List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Treatment Name</th>
+                    <th>Price (USD)</th>
+                </tr>
+            </thead>
+            <tbody id="treatment-list">
+                <!-- Data will be injected here using JavaScript -->
+            </tbody>
+        </table>
+    </main>
+
+    <footer>Generated for demonstration purposes</footer>
+
+    <script>
+        const dummyData = [
+            { treatment: "Antithyroid Antibody Test", price: 50 },
+            { treatment: "Latex Rheumatoid Factor Test", price: 50 },
+            { treatment: "IL for Transplant Patients", price: 300 },
+            { treatment: "Myeloma Investigation", price: 500 },
+            { treatment: "Tumour Marker Test", price: 100 },
+            { treatment: "Tissue Typing AB", price: 1500 },
+            { treatment: "Tissue Typing DR+AB", price: 2000 },
+            { treatment: "Crossmatch (PBL)", price: 100 },
+            { treatment: "Pregnancy Test", price: 50 },
+            { treatment: "Alpha-1 Antitrypsin", price: 500 },
+            { treatment: "Flow Cytometer", price: 25 },
+            { treatment: "Real-Time PCR-96 Well Plate", price: 500 },
+            { treatment: "Real-Time PCR-Probe Master", price: 5200 },
+            { treatment: "Sclerotherapy Without Anae.", price: 300 },
+            { treatment: "Hydrogen Breath Test", price: 50 }
+        ];
+
+        const tableBody = document.getElementById("treatment-list");
+
+        dummyData.forEach((data) => {
+            const row = document.createElement("tr");
+
+            const treatmentCell = document.createElement("td");
+            treatmentCell.textContent = data.treatment;
+            row.appendChild(treatmentCell);
+
+            const priceCell = document.createElement("td");
+            priceCell.textContent = data.price.toFixed(2);
+            row.appendChild(priceCell);
+
+            tableBody.appendChild(row);
+        });
+
+        // Optional: Randomize the hospital name
+        const hospitalNames = ["City Care Hospital", "Global Health Center", "Healing Touch Medical", "Wellness Hospital"];
+        document.getElementById("hospital-name").textContent = hospitalNames[Math.floor(Math.random() * hospitalNames.length)];
+    </script>
+</body>
+</html>
