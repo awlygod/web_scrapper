@@ -15,8 +15,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
+// Variable to store last scraped data for comparison
+let lastScrapedData = [];
+let timeoutId; // To store the timeout ID for debouncing
+
 function createSuccessDialog() {
-  // Create dialog container
   const dialog = document.createElement('div');
   dialog.style.position = 'fixed';
   dialog.style.top = '50%';
@@ -30,13 +33,11 @@ function createSuccessDialog() {
   dialog.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
   dialog.style.textAlign = 'center';
 
-  // Success message
   const message = document.createElement('p');
   message.textContent = 'Data Scraped Successfully!';
   message.style.fontSize = '18px';
   message.style.marginBottom = '15px';
 
-  // Close button
   const closeBtn = document.createElement('button');
   closeBtn.textContent = 'Close';
   closeBtn.style.backgroundColor = 'white';
@@ -69,15 +70,30 @@ function scrapeDataAndSync() {
     treatments.push({ treatmentName, price });
   });
 
-  // Save scraped data to Firebase
-  set(ref(database, "scrapedTreatments"), treatments)
-    .then(() => {
-      createSuccessDialog();
-    })
-    .catch((error) => {
-      console.error("Error syncing scraped data: ", error);
-    });
+  // Check if the new data is different from the last scraped data
+  if (JSON.stringify(treatments) !== JSON.stringify(lastScrapedData)) {
+    // Clear previous timeout (reset debounce)
+    clearTimeout(timeoutId);
+
+    // Set a new timeout to scrape the data after 5 seconds
+    timeoutId = setTimeout(() => {
+      // Data has changed, so sync it with Firebase
+      set(ref(database, "scrapedTreatments"), treatments)
+        .then(() => {
+          lastScrapedData = treatments; // Update last scraped data
+          createSuccessDialog();
+        })
+        .catch((error) => {
+          console.error("Error syncing scraped data: ", error);
+        });
+    }, 5000); // 5000ms = 5 seconds
+  } else {
+    console.log("No new data to scrape.");
+  }
 }
 
-// Attach Event Listener to Button
-document.querySelector("#sync-data").addEventListener("click", scrapeDataAndSync);
+// Poll every 10 seconds (10000 milliseconds)
+setInterval(scrapeDataAndSync, 10000);
+
+// Optional: Trigger the first scrape immediately
+scrapeDataAndSync();
